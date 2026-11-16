@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E2433">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LabLens">
+<link rel="manifest" href="manifest.webmanifest">
+<title>LabLens · Intérprete de laboratorio</title>
+<style>
+:root{--bg:#F2F5F8;--pn:#fff;--ink:#10283A;--mu:#5B7284;--ln:#DCE4EA;--ac:#0A7C8C;--n:#1E8E5A;--h:#B8620A;--l:#2B6CB0;--c:#C62F3B;--hd:#0E2433;--ct:#fff;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#0B1620;--pn:#13232F;--ink:#E6EEF3;--mu:#93A8B7;--ln:#23384A;--ac:#34B6C6;--n:#4CC38A;--h:#F0A04B;--l:#6FA8E8;--c:#FF6B76;--ct:#06141C}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;padding-bottom:calc(84px + env(safe-area-inset-bottom));font-variant-numeric:tabular-nums}
+header{background:var(--hd);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header h1{font-size:19px;margin:0;letter-spacing:.2px}header small{color:#9FC3CF;font-size:12px}
+header svg{width:84px;height:30px;flex:none}
+main{max-width:720px;margin:0 auto;padding:14px}
+section[hidden]{display:none}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:16px;margin:0 0 10px}h3{font-size:13px;color:var(--ac);margin:16px 0 2px}h4{font-size:13px;margin:12px 0 2px;color:var(--ac)}
+.mu{color:var(--mu);font-size:13px}.warn{font-size:13px;color:var(--mu);border-left:3px solid var(--ac);padding-left:10px;margin-bottom:12px}
+.f{display:grid;grid-template-columns:1fr 90px;gap:10px;margin-bottom:10px}
+input,button{font:inherit}
+input[type=text],input[inputmode]{width:100%;padding:10px 12px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--ink);font-size:17px}
+input:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.seg{display:flex;border:1px solid var(--ln);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.seg button{flex:1;padding:10px;border:0;background:var(--bg);color:var(--mu)}
+.seg button[aria-pressed=true]{background:var(--ac);color:var(--ct);font-weight:600}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-weight:600;margin:4px 6px 4px 0}
+.btn.pr{background:var(--ac);color:var(--ct)}
+#fl{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}#fl img{height:72px;border-radius:8px;border:1px solid var(--ln)}
+.doc{padding:8px 10px;border:1px solid var(--ln);border-radius:8px;font-size:13px;color:var(--ac)}
+.p{display:grid;grid-template-columns:1fr 104px;gap:4px 10px;padding:10px 0;border-top:1px solid var(--ln);align-items:center}
+.cw{grid-column:1/-1}.cw:empty{display:none}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--k);color:var(--ct)}
+.n{--k:var(--n)}.h{--k:var(--h)}.l{--k:var(--l)}.c{--k:var(--c)}
+.pc{border-left:5px solid var(--k)}
+.pc summary{cursor:pointer;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pc .v{margin-left:auto;font-weight:700}
+.al{background:var(--c);color:var(--ct);border-radius:14px;padding:12px 14px;margin-bottom:12px;font-weight:600}
+.ig{border-left:5px solid var(--ac)}.ig b{display:block}
+.sm{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.sm div{flex:1;min-width:70px;background:var(--pn);border:1px solid var(--ln);border-top:4px solid var(--k);border-radius:12px;padding:8px;text-align:center}.sm b{font-size:22px;display:block}
+#rep{white-space:pre-wrap;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--hd);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;padding:15px 4px;border:0;background:none;color:#9FC3CF;font-weight:600}
+nav button[aria-selected=true]{color:#fff;box-shadow:inset 0 3px #34B6C6}
+@media print{header,nav,.no{display:none!important}body{background:#fff;color:#000}}
+</style></head><body>
+<header><div><h1>LabLens</h1><small>Intérprete de laboratorio clínico</small></div>
+<svg viewBox="0 0 84 30" aria-hidden="true"><path d="M0 17h18l5-13 8 25 6-12h47" fill="none" stroke="#34B6C6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></header>
+<main>
+<div class="warn">Herramienta educativa de apoyo orientativo. No diagnostica ni reemplaza el juicio clínico. Usa solo datos anonimizados: nada se guarda ni se envía; todo se procesa en este dispositivo.</div>
+
+<section id="t0">
+<div class="card"><h2>Paciente (anonimizado)</h2>
+<div class="f"><input type="text" id="cod" placeholder="Código (sin nombre ni DNI)" maxlength="20" autocomplete="off"><input inputmode="numeric" id="age" placeholder="Edad" aria-label="Edad"></div>
+<div class="seg" role="group" aria-label="Sexo"><button data-s="M" aria-pressed="true">Masculino</button><button data-s="F" aria-pressed="false">Femenino</button></div>
+<div class="mu" id="pedi" hidden>Los rangos de referencia son de adultos; en menores de 18 años no son válidos.</div></div>
+<div class="card"><h2>Adjuntar resultados</h2>
+<div class="mu">Sube PDF o fotos como referencia visual y transcribe los valores abajo. La lectura automática de archivos no está incluida.</div>
+<label class="btn" style="margin-top:8px">Elegir archivos<input id="fi" type="file" accept="image/*,application/pdf" multiple hidden></label><div id="fl"></div></div>
+<div class="card"><h2>Valores del laboratorio</h2><div class="mu">Completa solo los que tengas. Se clasifican al escribir.</div><div id="rows"></div></div>
+<button class="btn pr" id="go">Analizar resultados</button><button class="btn" id="rs">Borrar todo</button>
+</section>
+
+<section id="t1" hidden></section>
+
+<section id="t2" hidden><div class="card"><div id="rep"></div></div>
+<div class="no"><button class="btn pr" id="cp">Copiar</button><button class="btn" id="sh">Compartir</button><button class="btn" id="pr">Imprimir / PDF</button></div></section>
+</main>
+<nav role="tablist"><button role="tab" aria-selected="true" data-t="0">Datos</button><button role="tab" aria-selected="false" data-t="1">Análisis</button><button role="tab" aria-selected="false" data-t="2">Informe</button></nav>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const G=['Hemograma','Química y electrolitos','Hepático y pancreático','Cardíaco e inflamación','Lípidos, coagulación y otros'];
+// [id, nombre, unidad, grupo, mín, máx, crítico bajo, crítico alto]  ([varón, mujer] cuando difiere)
+const P=[
+['hb','Hemoglobina','g/dL',0,[13.5,12],[17.5,15.5],7,20],['vcm','VCM','fL',0,80,100],
+['leu','Leucocitos','x10³/µL',0,4,11,2,30],['neu','Neutrófilos abs.','x10³/µL',0,1.8,7.5,.5],
+['plq','Plaquetas','x10³/µL',0,150,400,20,1000],
+['glu','Glucosa','mg/dL',1,70,100,50,500],['urea','Urea','mg/dL',1,15,45,,200],
+['crea','Creatinina','mg/dL',1,[.7,.6],[1.3,1.1],,5],['na','Sodio','mEq/L',1,135,145,120,160],
+['k','Potasio','mEq/L',1,3.5,5.1,2.5,6.5],['ca','Calcio total','mg/dL',1,8.5,10.5,6.5,13],['alb','Albúmina','g/dL',1,3.5,5,2],
+['alt','ALT (GPT)','U/L',2,7,40,,1000],['ast','AST (GOT)','U/L',2,10,40,,1000],['fa','Fosfatasa alcalina','U/L',2,40,130],
+['bil','Bilirrubina total','mg/dL',2,.2,1.2,,15],['lip','Lipasa','U/L',2,13,60],
+['trop','Troponina hs','ng/L',3,0,14,,14],['pcr','PCR','mg/L',3,0,5],['lac','Lactato','mmol/L',3,.5,2,,4],
+['inr','INR','',4,.8,1.2,,5],['col','Colesterol total','mg/dL',4,0,200],['tg','Triglicéridos','mg/dL',4,0,150,,1000],
+['fer','Ferritina','ng/mL',4,[30,15],[400,150]],['tsh','TSH','mUI/L',4,.4,4],['a1c','HbA1c','%',4,4,5.6]];
+const PM=Object.fromEntries(P.map(p=>[p[0],p]));
+// T[id][h|l] = [fisiopatología, causas y diferenciales, criterios de enfermería]
+const T={
+hb:{l:["Menor capacidad de transporte de O₂: hipoxia tisular con compensación (taquicardia, vasodilatación).","Ferropenia, hemorragia, hemólisis, déficit de B12/folato, ERC, inflamación crónica, aplasia o mielodisplasia.","Valorar palidez, disnea, taquicardia, mareo; prevenir caídas. Si es crítico: avisar de inmediato y preparar posible transfusión según protocolo."],h:["Aumento de masa eritrocitaria o hemoconcentración: hiperviscosidad y riesgo trombótico.","Deshidratación, EPOC/hipoxia crónica, tabaquismo, apnea del sueño, policitemia vera, andrógenos/EPO.","Valorar hidratación, SpO₂, cefalea y signos de trombosis."]},
+vcm:{l:["Síntesis deficiente de hemoglobina: eritrocitos pequeños.","Ferropenia, talasemia, anemia de enfermedad crónica, sideroblástica."],h:["Alteración de la maduración nuclear o de la membrana eritrocitaria.","Déficit de B12/folato, alcohol, hepatopatía, hipotiroidismo, fármacos (metotrexato, hidroxiurea), mielodisplasia."]},
+leu:{h:["Respuesta medular a infección, inflamación o estrés, o proliferación clonal.","Infección bacteriana, corticoides, estrés/ejercicio, tabaquismo, inflamación, leucemia o mieloproliferativos.","Controlar temperatura y signos vitales; buscar foco infeccioso; asepsia estricta."],l:["Menor producción o mayor consumo de leucocitos: inmunidad disminuida.","Virus, fármacos (quimioterapia, antitiroideos), déficit de B12/folato, hiperesplenismo, falla medular, autoinmunidad.","Vigilar fiebre; higiene de manos; evaluar aislamiento protector según protocolo."]},
+neu:{l:["Neutropenia: defensa antibacteriana comprometida; riesgo de sepsis.","Quimioterapia, fármacos, virus, autoinmunidad, déficit nutricional, falla medular.","Con <0,5 el riesgo es grave: fiebre = urgencia. Medir temperatura con frecuencia y aplicar aislamiento protector."],h:["Neutrofilia por movilización y demarginación.","Infección bacteriana, inflamación, estrés, corticoides, tabaquismo."]},
+plq:{l:["Menor producción, mayor destrucción o secuestro de plaquetas: riesgo hemorrágico.","PTI, hiperesplenismo, hepatopatía, CID, heparina (HIT), fármacos, déficit de B12/folato, sepsis; descartar artefacto por EDTA con frotis.","Vigilar petequias y sangrado de mucosas; evitar inyecciones IM y traumatismos; cepillado suave. Con <20 avisar de inmediato."],h:["Trombocitosis reactiva o clonal: riesgo trombótico.","Inflamación, ferropenia, esplenectomía, infección, neoplasia, trombocitemia esencial."]},
+glu:{h:["Déficit o resistencia a la insulina: hiperglucemia con diuresis osmótica y deshidratación.","Diabetes mellitus, estrés/infección, corticoides, pancreatitis, Cushing, muestra no en ayunas.","Verificar ayuno y hora de la muestra; cetonas si >250 o hay síntomas; hidratación; riesgo de cetoacidosis o estado hiperosmolar. Insulina solo con indicación."],l:["Aporte insuficiente de glucosa al SNC: respuesta adrenérgica y neuroglucopenia.","Insulina o sulfonilureas, ayuno, alcohol, insuficiencia hepática o suprarrenal, sepsis, insulinoma.","Valorar sudoración, temblor, confusión; aplicar protocolo de hipoglucemia y reevaluar a los 15 min."]},
+urea:{h:["Menor filtrado o mayor producción de urea.","Prerrenal (deshidratación, hipoperfusión), IRA/ERC, obstrucción, dieta hiperproteica, sangrado digestivo alto, corticoides.","Balance hídrico estricto, diuresis, signos de deshidratación; revisar fármacos nefrotóxicos."],l:["Menor síntesis hepática o dilución.","Hepatopatía grave, desnutrición, sobrehidratación, embarazo."]},
+crea:{h:["Descenso del filtrado glomerular con retención de productos nitrogenados.","IRA (prerrenal, renal, posrenal), ERC, rabdomiólisis, AINE, aminoglucósidos, contraste, masa muscular alta.","Diuresis horaria, peso y TA; evitar nefrotóxicos; consultar ajuste de dosis a la función renal."],l:["Baja masa muscular o dilución.","Sarcopenia, desnutrición, embarazo."]},
+na:{l:["Exceso relativo de agua: edema celular, sobre todo cerebral.","SIADH, insuficiencia cardíaca/hepática/renal, tiazidas, vómitos/diarrea, polidipsia, hiperglucemia, hipotiroidismo.","Valorar conciencia, cefalea, náuseas, convulsiones. Corrección lenta y solo con indicación (riesgo de desmielinización osmótica). Si es crítico: avisar."],h:["Déficit de agua libre: deshidratación celular.","Pérdidas de agua (fiebre, diarrea), diabetes insípida, ingesta insuficiente, exceso de sodio.","Valorar sed, sequedad de mucosas, irritabilidad y conciencia; balance hídrico; reposición lenta según indicación."]},
+k:{h:["Alteración del potencial de membrana: arritmias y debilidad.","Insuficiencia renal, acidosis, IECA/ARA-II/espironolactona, hemólisis de la muestra (pseudohiperpotasemia), rabdomiólisis, insuficiencia suprarrenal.","ALERTA si ≥6,5: ECG y monitorización; repetir descartando hemólisis; suspender aportes o fármacos solo bajo indicación médica."],l:["Hiperpolarización: debilidad, arritmias, íleo.","Diuréticos, vómitos/diarrea, hipomagnesemia, insulina o β-agonistas, hiperaldosteronismo.","Valorar debilidad, calambres y palpitaciones; ECG si <3 o hay síntomas; reposición con vía y velocidad indicadas, nunca en bolo IV."]},
+ca:{h:["Mayor calcio iónico: poliuria, deshidratación, arritmias.","Hiperparatiroidismo, neoplasias, exceso de vitamina D, inmovilización, tiazidas.","Hidratación; valorar confusión, estreñimiento, náuseas; ECG si es crítico."],l:["Hiperexcitabilidad neuromuscular (tetania).","Hipoalbuminemia (corregir calcio), hipoparatiroidismo, déficit de vitamina D, ERC, pancreatitis, hipomagnesemia.","Valorar parestesias, espasmo carpopedal, signos de Chvostek y Trousseau, QT."]},
+alb:{l:["Menor síntesis o pérdida: baja presión oncótica, edemas, menor transporte de fármacos y calcio.","Hepatopatía, desnutrición, síndrome nefrótico, enteropatía, inflamación aguda.","Valorar edemas y piel; apoyo nutricional; riesgo de lesión por presión."]},
+alt:{h:["Daño de hepatocitos con liberación de enzimas.","Hepatitis viral, esteatosis (MASLD), alcohol, fármacos (paracetamol, estatinas), autoinmune, isquemia, hemocromatosis.","Revisar medicación hepatotóxica y alcohol; valorar ictericia y coluria."]},
+ast:{h:["Daño hepático, muscular o cardíaco (menos específica que ALT).","Hepatopatía alcohólica, hepatitis, rabdomiólisis, infarto, hemólisis."]},
+fa:{h:["Patrón colestásico u óseo.","Obstrucción biliar (litiasis, tumor), colestasis intrahepática, infiltración hepática, enfermedad ósea, embarazo.","Valorar prurito, ictericia, coluria/acolia y dolor en hipocondrio derecho."]},
+bil:{h:["Exceso de producción (hemólisis), captación o conjugación alteradas, o excreción biliar bloqueada.","Hemólisis, síndrome de Gilbert, hepatitis, cirrosis, obstrucción biliar.","Valorar ictericia y prurito; cuidado de la piel; la fracción directa/indirecta orienta."]},
+lip:{h:["Liberación de enzimas pancreáticas por lesión acinar.","Pancreatitis aguda (>3× el límite superior), litiasis biliar, alcohol, hipertrigliceridemia, ERC, fármacos.","Valorar dolor epigástrico irradiado y vómitos; analgesia, dieta y fluidos según indicación; signos vitales."]},
+trop:{h:["Necrosis o injuria miocárdica con liberación de troponina.","Síndrome coronario agudo, miocarditis, TEP, insuficiencia cardíaca, ERC, sepsis, taquiarritmias.","ALERTA: avisar de inmediato, ECG y monitorización, reposo; valorar dolor torácico; seriar según protocolo."]},
+pcr:{h:["Reactante de fase aguda inducido por IL-6.","Infección (sobre todo bacteriana), inflamación, trauma o cirugía, autoinmunidad, neoplasia.","Monitorizar fiebre y signos de foco infeccioso; seguir la evolución."]},
+lac:{h:["Metabolismo anaerobio por hipoperfusión o hipoxia, o aclaramiento disminuido.","Sepsis/shock, hipoxia, isquemia, metformina, insuficiencia hepática, convulsiones.","ALERTA si ≥4: avisar de inmediato; signos vitales, perfusión y diuresis; acceso venoso; protocolo de sepsis."]},
+inr:{h:["Déficit de factores dependientes de vitamina K: coagulación más lenta.","Warfarina, hepatopatía, déficit de vitamina K, CID, desnutrición.","Vigilar sangrado y hematomas; evitar IM; presión prolongada tras punciones; revisar dosis del anticoagulante con el médico."]},
+col:{h:["Exceso de lípidos: riesgo aterogénico.","Dieta, hipercolesterolemia familiar, hipotiroidismo, síndrome nefrótico, colestasis, fármacos."]},
+tg:{h:["Mayor síntesis o menor aclaramiento de VLDL; con cifras muy altas, riesgo de pancreatitis.","Diabetes/resistencia a insulina, obesidad, alcohol, dieta, hipotiroidismo, fármacos, genética.","Verificar ayuno; educación nutricional. Con ≥1000 avisar: riesgo de pancreatitis."]},
+fer:{l:["Depósitos de hierro agotados.","Pérdida crónica de sangre, ingesta o absorción deficientes, embarazo.","Investigar sangrado; educación sobre dieta y hierro oral."],h:["Sobrecarga de hierro o reactante de fase aguda.","Inflamación, hepatopatía, hemocromatosis, síndrome metabólico, transfusiones."]},
+tsh:{h:["Hipofunción tiroidea con metabolismo lento.","Tiroiditis de Hashimoto, déficit de yodo, tiroidectomía, amiodarona, litio.","Valorar bradicardia, intolerancia al frío, estreñimiento, edema."],l:["Exceso de hormonas tiroideas.","Enfermedad de Graves, nódulo tóxico, tiroiditis, exceso de levotiroxina.","Valorar taquicardia, temblor, pérdida de peso, intolerancia al calor."]},
+a1c:{h:["Glucemia promedio elevada en los últimos 2–3 meses.","Diabetes (≥6,5 %), prediabetes (5,7–6,4 %); hemoglobinopatías pueden interferir."]}};
+
+const st={sex:'M',vals:{}};
+const pick=x=>Array.isArray(x)?x[st.sex==='F'?1:0]:x;
+const rng=p=>{const lo=pick(p[4]),hi=pick(p[5]);return(lo===0?'< '+hi:lo+'–'+hi)+' '+p[2]};
+function clf(p,v){const lo=pick(p[4]),hi=pick(p[5]);
+ if(p[7]!=null&&v>=p[7]&&v>hi)return'ch';if(p[6]!=null&&v<=p[6])return'cl';return v>hi?'h':v<lo?'l':'n'}
+const LB={n:'Normal',h:'Elevado',l:'Disminuido',ch:'Crítico alto',cl:'Crítico bajo'},K=c=>c[0]==='c'?'c':c;
+const info=e=>(T[e.p[0]]||{})[e.c.endsWith('h')?'h':'l']||[];
+
+$('#rows').innerHTML=G.map((g,i)=>`<h3>${g}</h3>`+P.filter(p=>p[3]===i).map(p=>`<div class="p" data-id="${p[0]}"><div><b>${p[1]}</b><div class="mu" data-r></div></div><input inputmode="decimal" autocomplete="off" aria-label="${p[1]}" placeholder="—"><div class="cw"></div></div>`).join('')).join('');
+function upd(){$$('.p').forEach(r=>{const p=PM[r.dataset.id],v=st.vals[p[0]],c=v==null?'':clf(p,v);
+ r.querySelector('[data-r]').textContent='Ref. '+rng(p);r.querySelector('.cw').innerHTML=c?`<span class="chip ${K(c)}">${LB[c]}</span>`:''})}
+$('#rows').addEventListener('input',e=>{const r=e.target.closest('.p');if(!r)return;const n=parseFloat(e.target.value.replace(',','.'));
+ isNaN(n)?delete st.vals[r.dataset.id]:st.vals[r.dataset.id]=n;upd()});
+$$('.seg button').forEach(b=>b.onclick=()=>{st.sex=b.dataset.s;$$('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));upd()});
+$('#age').oninput=e=>{$('#pedi').hidden=!(+e.target.value>0&&+e.target.value<18)};
+$('#fi').onchange=e=>{[...e.target.files].forEach(f=>{const u=URL.createObjectURL(f);
+ $('#fl').insertAdjacentHTML('beforeend',f.type.startsWith('image/')?`<a href="${u}" target="_blank"><img src="${u}" alt="Resultado adjunto"></a>`:`<a class="doc" href="${u}" target="_blank">PDF · ${esc(f.name)}</a>`)});e.target.value=''};
+$('#rs').onclick=()=>{if(!confirm('¿Borrar todos los datos ingresados?'))return;st.vals={};$$('.p input,#cod,#age').forEach(i=>i.value='');$('#fl').innerHTML='';upd()};
+
+function insights(S){const I=[],H=i=>S[i]&&S[i].endsWith('h'),L=i=>S[i]&&S[i].endsWith('l'),v=i=>st.vals[i],a=(t,d)=>I.push([t,d]);
+ if(L('hb'))L('vcm')?a('Anemia microcítica','Sugiere ferropenia'+(L('fer')?' (ferritina baja la apoya)':' (confirmar con ferritina)')+', talasemia o anemia inflamatoria. Descartar pérdidas digestivas o ginecológicas.'):H('vcm')?a('Anemia macrocítica','Considerar déficit de B12/folato, alcohol, hepatopatía, hipotiroidismo o mielodisplasia.'):a('Anemia normocítica','Considerar hemorragia aguda, hemólisis, ERC, inflamación crónica o ferropenia incipiente; los reticulocitos orientan.');
+ if(H('leu')&&H('neu'))a('Leucocitosis con neutrofilia'+(H('pcr')?' y PCR elevada':''),'Patrón compatible con infección bacteriana o inflamación aguda; también estrés o corticoides. Buscar foco (respiratorio, urinario, abdominal, cutáneo).');
+ if(L('neu')||L('leu'))a('Leucopenia/neutropenia','Mayor riesgo infeccioso. Causas: virus, fármacos, quimioterapia, déficit nutricional, falla medular. Medir temperatura y aplicar precauciones según protocolo.');
+ if(H('lac')&&(H('leu')||L('leu')||H('pcr')))a('Lactato elevado con marcadores inflamatorios','Posible sepsis con hipoperfusión tisular. Requiere evaluación médica urgente.');
+ if(H('crea')||H('urea')){const r=v('urea')/v('crea');a('Función renal alterada',(r>50?'Relación urea/creatinina alta ('+r.toFixed(0)+'): predomina un componente prerrenal (deshidratación, hipoperfusión, sangrado digestivo, hipercatabolismo). ':'Sugiere lesión renal aguda o enfermedad renal crónica; diferenciar causa prerrenal, intrínseca y obstructiva. ')+'Correlacionar con diuresis, TA, fármacos nefrotóxicos y valores previos.')}
+ if(H('k')&&H('crea'))a('Hiperpotasemia con creatinina elevada','Posible origen renal (menor excreción de potasio). Riesgo de arritmia: ECG y descartar hemólisis de la muestra.');
+ if(L('na')&&H('glu'))a('Hiponatremia con hiperglucemia','Parte puede ser dilucional; sodio corregido ≈ '+(v('na')+1.6*(v('glu')-100)/100).toFixed(0)+' mEq/L.');
+ if(H('glu')&&H('a1c'))a('Hiperglucemia sostenida','Glucosa y HbA1c elevadas orientan a diabetes o prediabetes según cifras y criterios vigentes; confirmar con el médico.');
+ if(H('alt')||H('ast')){const r=v('ast')/v('alt');a('Patrón hepatocelular',(r>2?'AST/ALT >2 ('+r.toFixed(1)+'): sugiere hepatopatía alcohólica o daño avanzado; considerar también músculo o corazón. ':H('alt')?'Predomio de ALT: considerar hepatitis viral, esteatosis (MASLD), fármacos o autoinmunidad. ':'AST elevada aislada: considerar también músculo, corazón o hemólisis. ')+'Revisar alcohol y medicación hepatotóxica.')}
+ if(H('fa')&&H('bil'))a('Patrón colestásico','FA y bilirrubina elevadas: obstrucción biliar (litiasis, tumor) o colestasis intrahepática. Valorar dolor, ictericia, acolia/coluria; la ecografía abdominal queda a criterio médico.');
+ if(L('alb')&&H('inr'))a('Posible falla de síntesis hepática','Albúmina baja e INR alto: hepatopatía avanzada, desnutrición o déficit de vitamina K.');
+ if(L('plq')&&H('inr'))a('Trombocitopenia con INR prolongado','Considerar hepatopatía avanzada, CID o sepsis. Riesgo hemorrágico: vigilar sangrado.');
+ if(v('ca')!=null&&v('alb')!=null&&v('alb')<4)a('Calcio corregido por albúmina','≈ '+(v('ca')+.8*(4-v('alb'))).toFixed(1)+' mg/dL; interpretar el calcio con este valor.');
+ if(H('lip'))a('Lipasa elevada','Con dolor abdominal y >3× el límite superior: pancreatitis aguda probable.'+(H('tg')?' Los triglicéridos altos pueden ser la causa.':'')+' Otras causas: ERC, obstrucción biliar, fármacos.');
+ if(H('trop'))a('Injuria miocárdica','Troponina elevada: síndrome coronario agudo, miocarditis, TEP, insuficiencia cardíaca, ERC o sepsis. Correlacionar con ECG, dolor y curva seriada.');
+ if((H('col')||H('tg'))&&H('glu'))a('Dislipidemia con hiperglucemia','Sugiere síndrome metabólico o resistencia a la insulina; riesgo cardiovascular elevado.');
+ if(H('tsh')&&(H('col')||H('vcm')||L('hb')))a('Posible hipotiroidismo con repercusión sistémica','TSH alta asociada a dislipidemia, macrocitosis o anemia.');
+ return I}
+function analyze(){const E=P.filter(p=>st.vals[p[0]]!=null).map(p=>({p,v:st.vals[p[0]],c:clf(p,st.vals[p[0]])})),S={};E.forEach(e=>S[e.p[0]]=e.c);return{E,I:insights(S)}}
+
+function renderA(){const{E,I}=analyze(),el=$('#t1');
+ if(!E.length){el.innerHTML='<div class="card">Ingresa al menos un resultado en la pestaña Datos para ver el análisis.</div>';return}
+ const n=c=>E.filter(e=>c(e.c)).length,cr=E.filter(e=>e.c[0]==='c'),ab=E.filter(e=>e.c!=='n'&&e.c[0]!=='c'),no=E.filter(e=>e.c==='n');
+ let h=`<div class="sm"><div class="n"><b>${no.length}</b>Normales</div><div class="h"><b>${n(c=>c==='h')}</b>Elevados</div><div class="l"><b>${n(c=>c==='l')}</b>Disminuidos</div><div class="c"><b>${cr.length}</b>Críticos</div></div>`;
+ cr.forEach(e=>h+=`<div class="al">Alerta: ${e.p[1]} ${e.v} ${e.p[2]} (${LB[e.c]}). Notificar al equipo médico según protocolo y verificar la muestra.</div>`);
+ if(I.length){h+='<h2>Interpretación integrada</h2>'+I.map(i=>`<div class="card ig"><b>${i[0]}</b>${i[1]}</div>`).join('')}
+ const card=e=>{const[fp,ca,en]=info(e),k=K(e.c);return`<details class="card pc ${k}" open><summary><b>${e.p[1]}</b><span class="chip ${k}">${LB[e.c]}</span><span class="v">${e.v} ${e.p[2]}</span></summary>
+ <h4>Clasificación</h4>${LB[e.c]}. Referencia: ${rng(e.p)}.${e.c[0]==='c'?' Valor potencialmente crítico.':''}
+ <h4>Interpretación fisiopatológica</h4>${fp||'Sin descripción disponible.'}
+ <h4>Posibles causas y diagnósticos diferenciales</h4>${ca||'—'}
+ ${en?`<h4>Criterios de enfermería</h4>${en}`:''}</details>`};
+ if(cr.length+ab.length)h+='<h2>Parámetros alterados</h2>'+[...cr,...ab].map(card).join('');
+ if(no.length)h+=`<details class="card"><summary><b>Normales (${no.length})</b></summary>${no.map(e=>`<div class="mu" style="padding:4px 0">${e.p[1]}: <b>${e.v} ${e.p[2]}</b> · ref. ${rng(e.p)}</div>`).join('')}</details>`;
+ el.innerHTML=h}
+
+function reportText(){const{E,I}=analyze();if(!E.length)return'Aún no hay resultados. Ingresa valores en la pestaña Datos.';
+ const cr=E.filter(e=>e.c[0]==='c'),ab=E.filter(e=>e.c!=='n'),L=[];
+ L.push('INFORME DE LABORATORIO (ORIENTATIVO)','Código: '+($('#cod').value||'sin código')+' · Sexo: '+st.sex+' · Edad: '+($('#age').value||'—'),new Date().toLocaleString('es-AR'),'','RESUMEN',E.length+' parámetros: '+(E.length-ab.length)+' normales, '+ab.length+' alterados, '+cr.length+' con alerta crítica.');
+ if(cr.length)L.push('','ALERTAS CRÍTICAS',...cr.map(e=>'! '+e.p[1]+' '+e.v+' '+e.p[2]+' ('+LB[e.c]+')'));
+ if(ab.length)L.push('','HALLAZGOS',...ab.map(e=>'• '+e.p[1]+' '+e.v+' '+e.p[2]+' (ref. '+rng(e.p)+'): '+LB[e.c]+'. '+(info(e)[0]||'')));
+ if(I.length)L.push('','INTERPRETACIÓN INTEGRADA',...I.map(i=>'• '+i[0]+': '+i[1]));
+ L.push('','RECOMENDACIONES DE EVALUACIÓN CLÍNICA','• Confirmar identidad de la muestra, ayuno, hemólisis y hora de extracción.','• Correlacionar con clínica, signos vitales, antecedentes y medicación.','• Notificar valores críticos al médico responsable de inmediato según protocolo.','• Repetir o seriar según indicación médica.');
+ const seen=new Set();ab.forEach(e=>{const t=info(e)[2];if(t&&!seen.has(t)){seen.add(t);L.push('• '+e.p[1]+' (enfermería): '+t)}});
+ L.push('','Herramienta educativa de apoyo. No constituye diagnóstico ni sustituye el juicio clínico.');return L.join('\n')}
+
+function tab(i){$$('section').forEach((s,j)=>s.hidden=j!=i);$$('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t==i));
+ if(i==1)renderA();if(i==2)$('#rep').textContent=reportText();scrollTo(0,0)}
+$$('nav button').forEach(b=>b.onclick=()=>tab(+b.dataset.t));$('#go').onclick=()=>tab(1);
+$('#cp').onclick=async()=>{try{await navigator.clipboard.writeText(reportText());$('#cp').textContent='Copiado'}catch(e){alert('No se pudo copiar; selecciona el texto manualmente.')}};
+$('#sh').onclick=()=>navigator.share?navigator.share({title:'Informe de laboratorio',text:reportText()}).catch(()=>{}):$('#cp').click();
+$('#pr').onclick=()=>print();
+upd();
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js');
+</script></body></html>
